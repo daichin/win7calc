@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Calculator (Windows 7)
+Comment=Windows 7 Calculator replica
+Exec=@DIR@/win7calc.sh
+Icon=accessories-calculator
+Categories=Utility;Calculator;
+Terminal=false
