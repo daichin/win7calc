@@ -24,6 +24,18 @@
 sed "s|@DIR@|$PWD|" win7calc.desktop > ~/.local/share/applications/win7calc.desktop
 ```
 
+## 原生版（C + GTK3）
+
+`native/` 是用 C 重寫的原生 x86-64 執行檔，功能和外觀與 Python 版相同（逐像素比對一致）。高精度運算使用 libmpdec（與 Python `decimal` 相同的函式庫，靜態連結），執行時只需要系統的 GTK3。
+
+```sh
+sudo apt install build-essential pkg-config libgtk-3-dev libmpdec-dev
+cd native
+make            # 產生 ./win7calc
+make check      # 執行核心測試
+./win7calc --mode sci
+```
+
 ## 功能
 
 | 檢視 | 內容 |

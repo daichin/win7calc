@@ -40,6 +40,11 @@ def check(x: Decimal) -> Decimal:
         return +x
 
 
+def neg(x: Decimal) -> Decimal:
+    with ctx():
+        return -x
+
+
 def is_int(x: Decimal) -> bool:
     return x == x.to_integral_value()
 
@@ -111,7 +116,7 @@ def root(x: Decimal, y: Decimal) -> Decimal:
         raise CalcError(ERR_INVALID)
     if x < 0:
         if is_int(y) and int(y) % 2:
-            return -root(-x, y)
+            return neg(root(neg(x), y))
         raise CalcError(ERR_INVALID)
     if x == 0:
         if y < 0:
@@ -205,7 +210,10 @@ def factorial(x: Decimal) -> Decimal:
 
 
 def int_part(x):
-    return x.to_integral_value(rounding="ROUND_DOWN") + D0 if x else D0
+    if not x:
+        return D0
+    with ctx():
+        return x.to_integral_value(rounding="ROUND_DOWN") + D0
 
 
 def frac_part(x):
@@ -334,7 +342,7 @@ def tan(x, unit):
             raise CalcError(ERR_INVALID)
         return D0
     s, c = _sin_cos_rad(to_radians(x, unit))
-    if abs(c) < Decimal("1e-45"):
+    if c.copy_abs() < Decimal("1e-45"):
         raise CalcError(ERR_INVALID)
     with ctx():
         return check(_snap(s / c))
@@ -369,7 +377,7 @@ def atan(x, unit):
 
 
 def asin(x, unit):
-    if abs(x) > 1:
+    if x.copy_abs() > 1:
         raise CalcError(ERR_INVALID)
     with ctx(WORK_PREC + 15):
         if abs(x) == 1:
@@ -380,7 +388,7 @@ def asin(x, unit):
 
 
 def acos(x, unit):
-    if abs(x) > 1:
+    if x.copy_abs() > 1:
         raise CalcError(ERR_INVALID)
     with ctx(WORK_PREC + 15):
         if x == 0:
@@ -410,15 +418,17 @@ def sinh(x):
 
 
 def cosh(x):
-    e = exp(abs(x))
+    e = exp(x.copy_abs())
     with ctx():
         return check((e + D1 / e) / 2)
 
 
 def tanh(x):
-    if abs(x) > 200:
+    if x.copy_abs() > 200:
         return Decimal(1 if x > 0 else -1)
-    e2 = exp(2 * x)
+    with ctx():
+        x2 = 2 * x
+    e2 = exp(x2)
     with ctx():
         return check((e2 - 1) / (e2 + 1))
 
@@ -438,7 +448,7 @@ def acosh(x):
 
 
 def atanh(x):
-    if abs(x) >= 1:
+    if x.copy_abs() >= 1:
         raise CalcError(ERR_INVALID)
     with ctx(WORK_PREC + 10):
         return check(((1 + x) / (1 - x)).ln() / 2)

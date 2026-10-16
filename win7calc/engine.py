@@ -328,7 +328,7 @@ class Engine:
                 e.neg = not e.neg
             return
         x = self._commit()
-        self._finish_unary("negate", x, -x if not self.int_mode else wrap(-x, self.bits))
+        self._finish_unary("negate", x, M.neg(x) if not self.int_mode else wrap(-x, self.bits))
 
     # ------------------------------------------------------------ binary ops
     def _apply(self, lhs, op, rhs):

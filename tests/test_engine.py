@@ -220,5 +220,37 @@ class ModeSwitch(unittest.TestCase):
         self.assertEqual(c.display, "12")
 
 
+class FullPrecision(unittest.TestCase):
+    """Scientific mode keeps 32 significant digits, never Decimal's default 28."""
+
+    def calc(self, value, *cmds):
+        c = Engine()
+        c.set_mode(E.SCI)
+        c.set_value(value)
+        for cmd in cmds:
+            c.set_value(cmd) if isinstance(cmd, str) else c.command(cmd)
+        return c.display
+
+    def test_negate(self):
+        self.assertEqual(self.calc("0.33333333333333333333333333333333", E.SIGN),
+                         "-0.33333333333333333333333333333333")
+
+    def test_int_of_long_number(self):
+        self.assertEqual(self.calc("1234567890123456789012345678901.5", E.INT),
+                         "1234567890123456789012345678901")
+
+    def test_atanh_near_one(self):
+        self.assertEqual(self.calc("0.99999999999999999999999999999999", E.INV, E.TANH),
+                         "37.187935078184703598996479335679")
+
+    def test_odd_root_of_negative(self):
+        self.assertEqual(self.calc("-2.0000000000000000000000000000001", E.ROOT, "3", E.EQU),
+                         "-1.2599210498948731647672106072782")
+
+    def test_cosh_uses_full_input(self):
+        self.assertEqual(self.calc("-1.0000000000000000000000000000001", E.COSH),
+                         "1.5430806348152437784779056207572")
+
+
 if __name__ == "__main__":
     unittest.main()
