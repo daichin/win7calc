@@ -1285,6 +1285,7 @@ int app_main(int argc, char **argv)
         fprintf(stderr, "win7calc: error: unrecognized arguments: %s\n", arg);
         return 2;
     }
+    g_set_prgname("win7calc"); /* Wayland app id / X11 class, matches win7calc.desktop */
     if (!gtk_init_check(&argc, &argv)) {
         fputs("win7calc: cannot open a display (DISPLAY/WAYLAND_DISPLAY not set).\n"
               "  Over SSH, either reconnect with X forwarding:  ssh -X user@host\n"

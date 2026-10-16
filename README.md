@@ -38,12 +38,16 @@ tar xzf win7calc-v1.0.0-linux-x86_64.tar.gz
 **自行編譯**：
 
 ```sh
-sudo apt install build-essential pkg-config libgtk-3-dev libmpdec-dev
+sudo apt install build-essential pkg-config libgtk-3-dev libmpdec-dev   # Debian / Ubuntu
+sudo pacman -S --needed base-devel pkgconf gtk3 mpdecimal               # Arch / Omarchy
 cd native
 make            # 產生 ./win7calc
 make check      # 執行核心測試
 ./win7calc --mode sci
+make install    # 安裝到 ~/.local/bin，並加入應用程式選單（PREFIX=/usr/local 可裝給所有使用者）
 ```
+
+有 `libmpdec.a`（Debian 系）時會靜態連結，否則（Arch）改用動態連結。
 
 ## 功能
 
