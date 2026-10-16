@@ -28,6 +28,15 @@ sed "s|@DIR@|$PWD|" win7calc.desktop > ~/.local/share/applications/win7calc.desk
 
 `native/` 是用 C 重寫的原生 x86-64 執行檔，功能和外觀與 Python 版相同（逐像素比對一致）。高精度運算使用 libmpdec（與 Python `decimal` 相同的函式庫，靜態連結），執行時只需要系統的 GTK3。
 
+**直接下載**：到 [Releases](https://github.com/daichin/win7calc/releases/latest) 下載 `win7calc-*-linux-x86_64.tar.gz`（需要 glibc 2.34+ 與 GTK 3.24，例如 Ubuntu 22.04+、Debian 12+、Fedora 35+）：
+
+```sh
+tar xzf win7calc-v1.0.0-linux-x86_64.tar.gz
+./win7calc-v1.0.0-linux-x86_64/win7calc
+```
+
+**自行編譯**：
+
 ```sh
 sudo apt install build-essential pkg-config libgtk-3-dev libmpdec-dev
 cd native
